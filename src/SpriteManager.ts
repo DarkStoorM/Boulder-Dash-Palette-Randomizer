@@ -2,15 +2,15 @@ import { IColorTable } from "./interfaces/IColorTable";
 import { Numbers } from "./Numbers";
 
 class SpriteManager {
-  /** DOM element (image) containing the Game Spritesheet */
-  private gameSpritesheet = document.getElementById("spritesheet") as HTMLImageElement;
   private initialPalette: IColorTable;
   private initialSpritesheet: string;
   private declare newColors: IColorTable;
+  /** DOM element (image) containing the Game Spritesheet */
+  private spritesheet = document.getElementById("spritesheet") as HTMLImageElement;
 
   constructor() {
     // Hold a copy of initial spritesheet and palette for quick revert when interrupted
-    this.initialSpritesheet = this.gameSpritesheet.src;
+    this.initialSpritesheet = this.spritesheet.src;
 
     // Base, classic BD colors
     this.initialPalette = {
@@ -32,7 +32,7 @@ class SpriteManager {
     context.drawImage(image, 0, 0);
 
     // Recolor the entire Spritesheet, then read and replace data in this ImageBuffer
-    const imageData = context.getImageData(0, 0, 480, 288);
+    const imageData = context.getImageData(0, 0, 160, 96);
     let currentPixel: string | null;
 
     this.newColors = this.generateNewColors();
@@ -51,8 +51,7 @@ class SpriteManager {
 
     // Update the temporary canvas and replace the main Spritesheet with recolored image
     context.putImageData(imageData, 0, 0);
-
-    this.gameSpritesheet.src = context.canvas.toDataURL();
+    this.spritesheet.src = context.canvas.toDataURL();
   };
 
   /**
@@ -67,8 +66,8 @@ class SpriteManager {
   /** Creates a temporary Canvas element for image manipulation */
   private createTemporaryCanvasContext = (): CanvasRenderingContext2D => {
     const newCanvas = document.createElement("canvas");
-    newCanvas.width = 480;
-    newCanvas.height = 288;
+    newCanvas.width = 160;
+    newCanvas.height = 96;
     const context = newCanvas.getContext("2d");
 
     // Thanks, TypeScript...
