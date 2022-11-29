@@ -6,4 +6,4 @@ if (!button) {
   throw new Error("Reroll button did not exist");
 }
 
-button.addEventListener("click", spriteManager.recolorSpritesheet);
+button.addEventListener("click", spriteManager.recolorSpritesheet.bind(this, undefined));

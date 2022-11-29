@@ -1,4 +1,3 @@
-import { Numbers } from "./utils/Numbers";
 import { IColorTable } from "./interfaces/IColorTable";
 import { Colors } from "./utils/Colors";
 
@@ -22,7 +21,7 @@ class SpriteManager {
     };
   }
 
-  public recolorSpritesheet = (): void => {
+  public recolorSpritesheet = (overrideColors?: IColorTable): void => {
     // Create a temporary canvas that will be used to manipulate the main Spritesheet
     const context = this.createTemporaryCanvasContext();
 
@@ -36,7 +35,7 @@ class SpriteManager {
     const imageData = context.getImageData(0, 0, 160, 96);
     let currentPixel: string | null;
 
-    this.newColors = this.generateNewColors();
+    this.newColors = overrideColors ?? this.generateNewColors();
 
     for (let x = 0; x < imageData.data.length; x = x + 4) {
       // Take the next chunk of the color and compare it to the base colors for replacement
@@ -46,7 +45,7 @@ class SpriteManager {
       // If any of the currently processed pixels will match the base color, they will be replaced with a new color
       Object.keys(this.initialPalette).forEach((colorType) => {
         if (currentPixel === this.initialPalette[colorType as keyof IColorTable].toString())
-          imageData.data.set(this.newColors[colorType as keyof IColorTable], x);
+          return imageData.data.set(this.newColors[colorType as keyof IColorTable], x);
       });
     }
 
@@ -58,24 +57,19 @@ class SpriteManager {
   /** Creates a temporary Canvas element for image manipulation */
   private createTemporaryCanvasContext = (): CanvasRenderingContext2D => {
     const newCanvas = document.createElement("canvas");
+
     newCanvas.width = 160;
     newCanvas.height = 96;
-    const context = newCanvas.getContext("2d");
 
-    // Thanks, TypeScript...
-    if (!context) {
-      throw new Error("Could not resolve the canvas context.");
-    }
-
-    return context;
+    return newCanvas.getContext("2d")!;
   };
 
   private generateNewColors = (): IColorTable => {
     return {
-      background: Colors.randomColor(0, 26),
-      highlight: Colors.randomColor(178, 256),
-      primary: Colors.randomColor(76, 155),
-      secondary: Colors.randomColor(40, 115),
+      background: Colors.randomColor(0, 31),
+      highlight: Colors.randomColor(175, 231),
+      primary: Colors.randomColor(75, 176),
+      secondary: Colors.randomColor(30, 116),
     };
   };
 }
