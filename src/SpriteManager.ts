@@ -35,7 +35,7 @@ class SpriteManager {
     const imageData = context.getImageData(0, 0, 160, 96);
     let currentPixel: string | null;
 
-    this.newColors = overrideColors ?? this.generateNewColors();
+    this.newColors = overrideColors ?? this.generateNewColorPalette();
 
     for (let x = 0; x < imageData.data.length; x = x + 4) {
       // Take the next chunk of the color and compare it to the base colors for replacement
@@ -64,7 +64,7 @@ class SpriteManager {
     return newCanvas.getContext("2d")!;
   };
 
-  private generateNewColors = (): IColorTable => {
+  private generateNewColorPalette = (): IColorTable => {
     return {
       background: Colors.randomColor(0, 31),
       highlight: Colors.randomColor(175, 231),
