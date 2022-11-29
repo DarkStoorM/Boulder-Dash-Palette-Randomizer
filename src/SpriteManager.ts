@@ -1,5 +1,5 @@
-import { IColorTable } from "./interfaces/IColorTable";
 import { Numbers } from "./Numbers";
+import { IColorTable } from "./interfaces/IColorTable";
 
 class SpriteManager {
   private initialPalette: IColorTable;
