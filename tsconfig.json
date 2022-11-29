@@ -1,0 +1,10 @@
+// tsconfig.json
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "lib": ["es5", "es6", "dom"],
+    "rootDir": ".",
+    "strict": true
+  }
+}
