@@ -21,7 +21,7 @@ class SpriteManager {
     };
   }
 
-  public recolorSpritesheet = (button: HTMLButtonElement): void => {
+  public recolorSpritesheet = (): void => {
     // Create a temporary canvas that will be used to manipulate the main Spritesheet
     const context = this.createTemporaryCanvasContext();
 
