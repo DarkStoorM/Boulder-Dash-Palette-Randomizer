@@ -1,5 +1,6 @@
-import { Numbers } from "./Numbers";
+import { Numbers } from "./utils/Numbers";
 import { IColorTable } from "./interfaces/IColorTable";
+import { Colors } from "./utils/Colors";
 
 class SpriteManager {
   private initialPalette: IColorTable;
@@ -14,10 +15,10 @@ class SpriteManager {
 
     // Base, classic BD colors
     this.initialPalette = {
-      background: this.colorFromHex("000000"),
-      highlight: this.colorFromHex("FFFFFF"),
-      primary: this.colorFromHex("646464"),
-      secondary: this.colorFromHex("A36E30"),
+      background: Colors.colorFromHex("000000"),
+      highlight: Colors.colorFromHex("FFFFFF"),
+      primary: Colors.colorFromHex("646464"),
+      secondary: Colors.colorFromHex("A36E30"),
     };
   }
 
@@ -43,24 +44,15 @@ class SpriteManager {
       currentPixel = imageData.data.slice(x, x + 4).toString();
 
       // If any of the currently processed pixels will match the base color, they will be replaced with a new color
-      if (currentPixel === this.initialPalette.background.toString()) imageData.data.set(this.newColors.background, x);
-      if (currentPixel === this.initialPalette.highlight.toString()) imageData.data.set(this.newColors.highlight, x);
-      if (currentPixel === this.initialPalette.primary.toString()) imageData.data.set(this.newColors.primary, x);
-      if (currentPixel === this.initialPalette.secondary.toString()) imageData.data.set(this.newColors.secondary, x);
+      Object.keys(this.initialPalette).forEach((colorType) => {
+        if (currentPixel === this.initialPalette[colorType as keyof IColorTable].toString())
+          imageData.data.set(this.newColors[colorType as keyof IColorTable], x);
+      });
     }
 
     // Update the temporary canvas and replace the main Spritesheet with recolored image
     context.putImageData(imageData, 0, 0);
     this.spritesheet.src = context.canvas.toDataURL();
-  };
-
-  /**
-   * Converts hex colors into string chunks
-   */
-  private colorFromHex = (hex: string): Uint8ClampedArray => {
-    const bigint = parseInt(hex, 16);
-
-    return new Uint8ClampedArray([(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255, 255]);
   };
 
   /** Creates a temporary Canvas element for image manipulation */
@@ -80,22 +72,12 @@ class SpriteManager {
 
   private generateNewColors = (): IColorTable => {
     return {
-      background: this.colorFromHex(this.rgbToHex(Numbers.int(0, 26), Numbers.int(0, 26), Numbers.int(0, 26))),
-      highlight: this.colorFromHex(this.rgbToHex(Numbers.int(178, 256), Numbers.int(178, 256), Numbers.int(178, 256))),
-      primary: this.colorFromHex(this.rgbToHex(Numbers.int(76, 155), Numbers.int(76, 155), Numbers.int(76, 155))),
-      secondary: this.colorFromHex(this.rgbToHex(Numbers.int(40, 115), Numbers.int(40, 115), Numbers.int(40, 115))),
+      background: Colors.randomColor(0, 26),
+      highlight: Colors.randomColor(178, 256),
+      primary: Colors.randomColor(76, 155),
+      secondary: Colors.randomColor(40, 115),
     };
   };
-
-  private rgbToHex = (r: number, g: number, b: number) =>
-    [r, g, b]
-      .map((x) => {
-        const hex = x.toString(16);
-
-        // 0 has to be prepended in case we rolled a single-digit number
-        return hex.length === 1 ? "0" + hex : hex;
-      })
-      .join("");
 }
 
 export const spriteManager = new SpriteManager();
