@@ -15,11 +15,12 @@ export class Colors {
   /**
    * Returns a random Hex color from the given RGB color value range
    *
+   * TODO: add range per color channel
+   *
    * @param   {number}             rangeMin  Color value range Minimum
    * @param   {number}             rangeMax  Color value range Maximum (exclusive)
    */
   public static randomColor(rangeMin: number, rangeMax: number): Uint8ClampedArray {
-    // TODO: add range per color channel
     const hexColor = Colors.rgbToHex(
       Numbers.int(rangeMin, rangeMax),
       Numbers.int(rangeMin, rangeMax),
