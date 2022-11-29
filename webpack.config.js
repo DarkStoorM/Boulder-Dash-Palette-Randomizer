@@ -1,23 +1,8 @@
 //webpack.config.js
 const path = require("path");
-const JavaScriptObfuscator = require("webpack-obfuscator");
 const TerserPlugin = require("terser-webpack-plugin");
 
 const plugins = [
-  new JavaScriptObfuscator({
-    compact: true,
-    disableConsoleOutput: true,
-    log: false,
-    renameGlobals: true,
-    renameProperties: false,
-    selfDefending: true,
-    simplify: true,
-    stringArray: true,
-    stringArrayEncoding: ["base64"],
-    target: "browser",
-    transformObjectKeys: true,
-    unicodeEscapeSequence: false,
-  }),
   new TerserPlugin({
     parallel: true,
     extractComments: false,
@@ -51,5 +36,5 @@ module.exports = {
       },
     ],
   },
-  plugins: [],
+  plugins: plugins,
 };
