@@ -2,14 +2,18 @@ import { IColorTable } from "./interfaces/IColorTable";
 import { Numbers } from "./Numbers";
 
 class SpriteManager {
-  public baseColors: IColorTable;
   /** DOM element (image) containing the Game Spritesheet */
-  public gameSpritesheet = document.getElementById("spritesheet") as HTMLImageElement;
-  public declare newColors: IColorTable;
+  private gameSpritesheet = document.getElementById("spritesheet") as HTMLImageElement;
+  private initialPalette: IColorTable;
+  private initialSpritesheet: string;
+  private declare newColors: IColorTable;
 
   constructor() {
+    // Hold a copy of initial spritesheet and palette for quick revert when interrupted
+    this.initialSpritesheet = this.gameSpritesheet.src;
+
     // Base, classic BD colors
-    this.baseColors = {
+    this.initialPalette = {
       background: this.colorFromHex("000000"),
       highlight: this.colorFromHex("FFFFFF"),
       primary: this.colorFromHex("646464"),
@@ -17,14 +21,14 @@ class SpriteManager {
     };
   }
 
-  public recolorSpritesheet = (): void => {
+  public recolorSpritesheet = (button: HTMLButtonElement): void => {
     // Create a temporary canvas that will be used to manipulate the main Spritesheet
     const context = this.createTemporaryCanvasContext();
 
     // Prepare a new image and draw the main image on the temporary canvas
     const image = new Image();
 
-    image.src = this.gameSpritesheet.src;
+    image.src = this.initialSpritesheet;
     context.drawImage(image, 0, 0);
 
     // Recolor the entire Spritesheet, then read and replace data in this ImageBuffer
@@ -39,20 +43,16 @@ class SpriteManager {
       currentPixel = imageData.data.slice(x, x + 4).toString();
 
       // If any of the currently processed pixels will match the base color, they will be replaced with a new color
-      if (currentPixel === this.baseColors.background.toString()) imageData.data.set(this.newColors.background, x);
-      if (currentPixel === this.baseColors.highlight.toString()) imageData.data.set(this.newColors.highlight, x);
-      if (currentPixel === this.baseColors.primary.toString()) imageData.data.set(this.newColors.primary, x);
-      if (currentPixel === this.baseColors.secondary.toString()) imageData.data.set(this.newColors.secondary, x);
+      if (currentPixel === this.initialPalette.background.toString()) imageData.data.set(this.newColors.background, x);
+      if (currentPixel === this.initialPalette.highlight.toString()) imageData.data.set(this.newColors.highlight, x);
+      if (currentPixel === this.initialPalette.primary.toString()) imageData.data.set(this.newColors.primary, x);
+      if (currentPixel === this.initialPalette.secondary.toString()) imageData.data.set(this.newColors.secondary, x);
     }
 
     // Update the temporary canvas and replace the main Spritesheet with recolored image
     context.putImageData(imageData, 0, 0);
 
-    //
     this.gameSpritesheet.src = context.canvas.toDataURL();
-
-    // Swap the base colors with new palette, so we can keep rerolling
-    this.baseColors = this.newColors;
   };
 
   /**
