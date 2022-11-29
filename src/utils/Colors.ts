@@ -2,7 +2,7 @@ import { Numbers } from "./Numbers";
 
 export class Colors {
   /**
-   * Converts hex color string (no-hash) into string chunks
+   * Converts hex color string (no-hash) into color chunks
    *
    * @param     {string}    hex Hex representation of a color without # symbol
    */
@@ -13,18 +13,33 @@ export class Colors {
   }
 
   /**
-   * Returns a random Hex color from the given RGB color value range
+   * Returns a random color chunk.
    *
-   * TODO: add range per color channel
+   * Optionally, it accepts separate color channels to allow introducing variety into generated
+   * colors. If any of the optional channels is omitted, Red channel will be used instead.
    *
-   * @param   {number}             rangeMin  Color value range Minimum
-   * @param   {number}             rangeMax  Color value range Maximum (exclusive)
+   * Red is also used as a **main** color range, meaning that only this argument can be specified
+   * to generate a random color from the same values across all color channels.
+   *
+   * @param   {number}  rMin  Red channel, min range color value (0-256)
+   * @param   {number}  rMax  Red channel, max range color value (0-256)
+   * @param   {number}  gMin  Green channel, min range color value (0-256)
+   * @param   {number}  gMax  Green channel, max range color value (0-256)
+   * @param   {number}  bMin  Blue channel, min range color value (0-256)
+   * @param   {number}  bMax  Blue channel, max range color value (0-256)
    */
-  public static randomColor(rangeMin: number, rangeMax: number): Uint8ClampedArray {
+  public static randomColor(
+    rMin: number,
+    rMax: number,
+    gMin?: number,
+    gMax?: number,
+    bMin?: number,
+    bMax?: number
+  ): Uint8ClampedArray {
     const hexColor = Colors.rgbToHex(
-      Numbers.int(rangeMin, rangeMax),
-      Numbers.int(rangeMin, rangeMax),
-      Numbers.int(rangeMin, rangeMax)
+      Numbers.int(rMin, rMax),
+      Numbers.int(gMin ?? rMin, gMax ?? rMax),
+      Numbers.int(bMin ?? rMin, bMax ?? rMax)
     );
 
     return Colors.colorFromHex(hexColor);
@@ -33,9 +48,9 @@ export class Colors {
   /**
    * Converts an RGB color combination into Hex representation
    *
-   * @param   {number}  r  Red channel (0-255)
-   * @param   {number}  g  Green channel (0-255)
-   * @param   {number}  b  Blue channel (0.255)
+   * @param   {number}  r  Red channel (0-256)
+   * @param   {number}  g  Green channel (0-256)
+   * @param   {number}  b  Blue channel (0.256)
    */
   public static rgbToHex(r: number, g: number, b: number) {
     return [r, g, b]
