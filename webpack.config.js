@@ -22,8 +22,9 @@ const plugins = [
 ];
 
 module.exports = {
-  mode: "production",
+  mode: "development",
   cache: false,
+  devtool: "inline-source-map",
   entry: {
     app: "./src/app.ts",
     style: './scss/app.scss',
