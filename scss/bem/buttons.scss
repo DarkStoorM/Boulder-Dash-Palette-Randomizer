@@ -1,0 +1,19 @@
+.buttons {
+  &__container {
+    display: grid;
+    gap: $gap;
+    grid-template-columns: 1fr 1fr;
+    margin: calc(#{$gap} / 2) 0 calc(#{$gap} / 2) 0;
+    width: $generator-width;
+
+    & .button {
+      background-color: #335a61;
+      color: #ffffff;
+      height: 2rem;
+      margin: 0;
+      text-transform: uppercase;
+
+      @include full-border();
+    }
+  }
+}

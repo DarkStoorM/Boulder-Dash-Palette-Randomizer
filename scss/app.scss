@@ -1,0 +1,26 @@
+@import './mixins.scss';
+@import './variables.scss';
+
+*,
+:after,
+:before {
+  box-sizing: border-box;
+}
+
+html {
+  line-height: 16pt;
+  -webkit-text-size-adjust: 16pt;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+body {
+  background-color: #3b3939;
+  color: #908585;
+  margin: 2rem;
+
+  @include flex-center();
+}
+
+@import './bem/main.scss';
+@import './bem/color-components.scss';
+@import './bem/buttons.scss';

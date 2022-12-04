@@ -1,11 +1,41 @@
+import { domManipulator } from "./DOMManipulator";
 import { IColorTable } from "./interfaces/IColorTable";
 import { Colors } from "./utils/Colors";
 
 class SpriteManager {
+  private canvasContext: globalThis.CanvasRenderingContext2D;
+  /**
+   * Defines a range of values for how bright specific palette colors will be
+   *
+   * TODO: add form controls to this for overriding purposes
+   * TODO: add base copy for resetting purposes
+   */
+  private colorRanges: Record<keyof IColorTable, [number, number]> = {
+    background: [0, 36],
+    highlight: [175, 231],
+    primary: [75, 176],
+    secondary: [30, 116],
+  };
+  /**
+   * Defines the base colors the spritesheet will be colored with on refresh / regeneration
+   */
   private initialPalette: IColorTable;
+  /**
+   * Holds a copy of the initial spritesheet, which is automatically assigned on every generation, so we don't have to
+   * wait for the current recolor operation to finish, avoiding color collisions during the interruption
+   */
   private initialSpritesheet: string;
+  /**
+   * Holds a palette of previously used colors to provide Color Locking functionality
+   */
+  private declare lastPickedColors: IColorTable;
+  /**
+   * Holds a palette of newly generated colors, taking locked colors into account
+   */
   private declare newColors: IColorTable;
-  /** DOM element (image) containing the Game Spritesheet */
+  /**
+   * DOM element (image) containing the Game Spritesheet
+   */
   private spritesheet = document.getElementById("spritesheet") as HTMLImageElement;
 
   constructor() {
@@ -19,22 +49,44 @@ class SpriteManager {
       primary: Colors.colorFromHex("646464"),
       secondary: Colors.colorFromHex("A36E30"),
     };
+
+    this.lastPickedColors = this.initialPalette;
+
+    // Initialize the element colors in the DOM
+    domManipulator.recolorAllElements(this.initialPalette);
+
+    const newCanvas = document.createElement("canvas") as HTMLCanvasElement;
+
+    newCanvas.width = 160;
+    newCanvas.height = 96;
+
+    const context = newCanvas.getContext("2d");
+
+    // Thanks, TypeScript.
+    if (!context) {
+      throw new Error("Could not resolve Canvas Context");
+    }
+
+    this.canvasContext = context;
   }
 
+  /**
+   * Recolors all pixels on the source image with a new palette or with the provided palette
+   *
+   * @param   {IColorTable}  overrideColors  Color Palette to apply to this generation.
+   */
   public recolorSpritesheet = (overrideColors?: IColorTable): void => {
-    // Create a temporary canvas that will be used to manipulate the main Spritesheet
-    const context = this.createTemporaryCanvasContext();
-
     // Prepare a new image and draw the main image on the temporary canvas
     const image = new Image();
 
     image.src = this.initialSpritesheet;
-    context.drawImage(image, 0, 0);
+    this.canvasContext.drawImage(image, 0, 0);
 
     // Recolor the entire Spritesheet, then read and replace data in this ImageBuffer
-    const imageData = context.getImageData(0, 0, 160, 96);
+    const imageData = this.canvasContext.getImageData(0, 0, 160, 96);
     let currentPixel: string | null;
 
+    // If no override was passed in from the user, generate a color palette
     this.newColors = overrideColors ?? this.generateNewColorPalette();
 
     for (let x = 0; x < imageData.data.length; x = x + 4) {
@@ -43,34 +95,51 @@ class SpriteManager {
       currentPixel = imageData.data.slice(x, x + 4).toString();
 
       // If any of the currently processed pixels will match the base color, they will be replaced with a new color
-      Object.keys(this.initialPalette).forEach((colorType) => {
-        if (currentPixel === this.initialPalette[colorType as keyof IColorTable].toString())
-          return imageData.data.set(this.newColors[colorType as keyof IColorTable], x);
-      });
+      let colorType: keyof IColorTable;
+      for (colorType in this.initialPalette) {
+        if (currentPixel === this.initialPalette[colorType].toString()) {
+          imageData.data.set(this.newColors[colorType], x);
+          continue;
+        }
+      }
     }
 
     // Update the temporary canvas and replace the main Spritesheet with recolored image
-    context.putImageData(imageData, 0, 0);
-    this.spritesheet.src = context.canvas.toDataURL();
+    this.canvasContext.putImageData(imageData, 0, 0);
+    this.spritesheet.src = this.canvasContext.canvas.toDataURL();
+
+    domManipulator.recolorAllElements(this.newColors);
+
+    this.lastPickedColors = this.newColors;
   };
 
-  /** Creates a temporary Canvas element for image manipulation */
-  private createTemporaryCanvasContext = (): CanvasRenderingContext2D => {
-    const newCanvas = document.createElement("canvas");
-
-    newCanvas.width = 160;
-    newCanvas.height = 96;
-
-    return newCanvas.getContext("2d")!;
-  };
-
+  /**
+   * Creates a new palette of randomized colors, taking locked colors into account
+   */
   private generateNewColorPalette = (): IColorTable => {
-    return {
-      background: Colors.randomColor(0, 31),
-      highlight: Colors.randomColor(175, 231),
-      primary: Colors.randomColor(75, 176),
-      secondary: Colors.randomColor(30, 116),
+    const newPalette: IColorTable = {} as IColorTable;
+
+    // Define a temporary type just to not make a class out of it
+    type KeysEnum<T> = { [P in keyof Required<T>]: true };
+    const colorTypes: KeysEnum<IColorTable> = {
+      background: true,
+      highlight: true,
+      primary: true,
+      secondary: true,
     };
+
+    let colorType: keyof IColorTable;
+    for (colorType in colorTypes) {
+      // Disallow changing the locked pixel color, just set it to the initial color and continue
+      if (domManipulator.colorElements[colorType].isLocked()) {
+        newPalette[colorType] = this.lastPickedColors[colorType];
+        continue;
+      }
+
+      newPalette[colorType] = Colors.randomColor(this.colorRanges[colorType][0], this.colorRanges[colorType][1]);
+    }
+
+    return newPalette;
   };
 }
 
