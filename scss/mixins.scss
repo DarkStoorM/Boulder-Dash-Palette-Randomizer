@@ -1,0 +1,9 @@
+@mixin flex-center() {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+@mixin full-border() {
+  border: 1px solid black;
+}

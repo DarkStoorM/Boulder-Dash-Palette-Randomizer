@@ -1,0 +1,59 @@
+$main-width: 480px;
+
+.color-components {
+  display: flex;
+  flex-direction: row;
+  width: $main-width;
+
+  & > :not(:first-child) {
+    margin-left: $gap;
+  }
+
+  &__container {
+    height: 4rem;
+    width: 6rem;
+  }
+
+  &__fill {
+    &__container {
+      display: flex;
+      height: 2rem;
+
+      & > * {
+        @include full-border();
+      }
+
+      &--fill {
+        border-right: none;
+        height: 2rem;
+        width: 4rem;
+      }
+
+      &--lock {
+        background-color: #358435;
+        cursor: pointer;
+        height: 2rem;
+        user-select: none;
+        width: 2rem;
+
+        @include flex-center();
+      }
+    }
+  }
+
+  &__output {
+    @include full-border();
+
+    background-color: #555;
+    border-top: none;
+    color: white;
+    height: 2rem;
+    width: inherit;
+
+    @include flex-center();
+
+    &:before {
+      content: '#';
+    }
+  }
+}

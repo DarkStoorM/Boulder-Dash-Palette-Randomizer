@@ -1,3 +1,6 @@
+@import './mixins.scss';
+@import './variables.scss';
+
 *,
 :after,
 :before {
@@ -14,17 +17,10 @@ body {
   background-color: #3b3939;
   color: #908585;
   margin: 2rem;
+
+  @include flex-center();
 }
 
-.container {
-  width: 480px;
-}
-
-.container img {
-  width: 480px;
-  height: 288px;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: -webkit-crisp-edges;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-}
+@import './bem/main.scss';
+@import './bem/color-components.scss';
+@import './bem/buttons.scss';

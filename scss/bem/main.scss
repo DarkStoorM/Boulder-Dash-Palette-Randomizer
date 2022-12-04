@@ -1,0 +1,36 @@
+.layout {
+  background-color: rgba($color: #000000, $alpha: 0.2);
+  display: flex;
+  padding: $gap;
+  width: calc(#{$generator-width} + #{$content-width});
+
+  &__palette-generator {
+    &__result-image {
+      height: $result-image-height;
+      width: $generator-width;
+
+      & img {
+        height: inherit;
+        image-rendering: -moz-crisp-edges;
+        image-rendering: -webkit-crisp-edges;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+        user-select: none;
+        width: inherit;
+      }
+    }
+  }
+
+  &__content {
+    background-color: rgba($color: #000000, $alpha: 0.1);
+    color: #ccc;
+    margin-left: $gap;
+    min-width: calc(#{$content-width} - 3 * #{$gap});
+    padding: 1rem;
+    width: 100%;
+
+    & h2 {
+      margin: 0;
+    }
+  }
+}
