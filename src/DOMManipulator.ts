@@ -49,7 +49,8 @@ export class DOMManipulator {
   }
 
   /**
-   * Updates the Lock button, changing its icon/color depending on the Locked state
+   * Updates the Lock button, changing its icon/color depending on the Locked state, toggles the state internally on
+   * the button elements
    *
    * @param   {HTMLDivElement}  element  Color Element Lock button to update
    * @param   {boolean}         state    Current button Locked state (automatically assigned)
