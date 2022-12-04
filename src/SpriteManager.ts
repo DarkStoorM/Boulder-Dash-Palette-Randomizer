@@ -3,6 +3,7 @@ import { IColorTable } from "./interfaces/IColorTable";
 import { Colors } from "./utils/Colors";
 
 class SpriteManager {
+  private canvasContext: globalThis.CanvasRenderingContext2D;
   /**
    * Defines a range of values for how bright specific palette colors will be
    *
@@ -36,7 +37,6 @@ class SpriteManager {
    * DOM element (image) containing the Game Spritesheet
    */
   private spritesheet = document.getElementById("spritesheet") as HTMLImageElement;
-  private canvasContext: globalThis.CanvasRenderingContext2D;
 
   constructor() {
     // Hold a copy of initial spritesheet and palette for quick revert when interrupted
