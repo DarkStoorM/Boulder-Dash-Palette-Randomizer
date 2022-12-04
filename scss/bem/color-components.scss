@@ -44,9 +44,9 @@ $main-width: 480px;
   &__output {
     @include full-border();
 
-    background-color: #555;
+    background-color: #555555;
     border-top: none;
-    color: white;
+    color: #ffffff;
     height: 2rem;
     width: inherit;
 
