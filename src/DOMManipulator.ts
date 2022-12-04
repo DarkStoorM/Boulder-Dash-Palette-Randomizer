@@ -11,6 +11,10 @@ type ColorElement = {
    */
   lockButton: HTMLDivElement;
   /**
+   * Element containing the Reroll "button", which holds currently generated hex color in its dataset
+   */
+  reroll: HTMLDivElement;
+  /**
    * Element containing the final Hex color code
    */
   outputText: HTMLDivElement;
@@ -41,6 +45,7 @@ export class DOMManipulator {
 
       this.colorElements[label].fill = document.getElementById(`${label}-fill`) as HTMLDivElement;
       this.colorElements[label].outputText = document.getElementById(`${label}-output`) as HTMLDivElement;
+      this.colorElements[label].reroll = document.getElementById(`${label}-reroll`) as HTMLDivElement;
       this.colorElements[label].lockButton = document.getElementById(`${label}-lock`) as HTMLDivElement;
       this.colorElements[label].isLocked = (): boolean => {
         return this.colorElements[label].lockButton.dataset.locked?.toLowerCase() == "true";
@@ -77,6 +82,7 @@ export class DOMManipulator {
 
       this.colorElements[colorType].fill.style.backgroundColor = `#${newHex}`;
       this.colorElements[colorType].outputText.innerText = newHex;
+      this.colorElements[colorType].reroll.dataset.current = newHex;
     }
   };
 

@@ -71,6 +71,24 @@ class SpriteManager {
   }
 
   /**
+   * Recolors the source image, but only the selected color will be overridden
+   *
+   * @param   {keyof}  colorType    Color type from the Palette. @see IColorTable
+   */
+  public recolorSpritesheetWithSingle = (colorType: keyof IColorTable): void => {
+    // Ignore if this color is locked
+    if (domManipulator.colorElements[colorType].isLocked()) {
+      return;
+    }
+
+    // Break the reference, else the spritesheet will not be recolored due to the overridden colors
+    const newPalette = Object.assign({}, this.lastPickedColors);
+    newPalette[colorType] = this.getRandomColorFromRange(colorType);
+
+    this.recolorSpritesheet(newPalette);
+  };
+
+  /**
    * Recolors all pixels on the source image with a new palette or with the provided palette
    *
    * @param   {IColorTable}  overrideColors  Color Palette to apply to this generation.
@@ -136,10 +154,19 @@ class SpriteManager {
         continue;
       }
 
-      newPalette[colorType] = Colors.randomColor(this.colorRanges[colorType][0], this.colorRanges[colorType][1]);
+      newPalette[colorType] = this.getRandomColorFromRange(colorType);
     }
 
     return newPalette;
+  };
+
+  /**
+   * Generates a random number for the given color type from the palette within its defined range
+   *
+   * @param   {keyof}              colorType    Type of the color from the palette. @see IColorTable (keys)
+   */
+  private getRandomColorFromRange = (colorType: keyof IColorTable): Uint8ClampedArray => {
+    return Colors.randomColor(this.colorRanges[colorType][0], this.colorRanges[colorType][1]);
   };
 }
 
