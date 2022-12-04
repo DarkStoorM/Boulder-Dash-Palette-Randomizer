@@ -36,6 +36,7 @@ class SpriteManager {
    * DOM element (image) containing the Game Spritesheet
    */
   private spritesheet = document.getElementById("spritesheet") as HTMLImageElement;
+  private canvasContext: globalThis.CanvasRenderingContext2D;
 
   constructor() {
     // Hold a copy of initial spritesheet and palette for quick revert when interrupted
@@ -53,6 +54,20 @@ class SpriteManager {
 
     // Initialize the element colors in the DOM
     domManipulator.recolorAllElements(this.initialPalette);
+
+    const newCanvas = document.createElement("canvas") as HTMLCanvasElement;
+
+    newCanvas.width = 160;
+    newCanvas.height = 96;
+
+    const context = newCanvas.getContext("2d");
+
+    // Thanks, TypeScript.
+    if (!context) {
+      throw new Error("Could not resolve Canvas Context");
+    }
+
+    this.canvasContext = context;
   }
 
   /**
@@ -61,17 +76,14 @@ class SpriteManager {
    * @param   {IColorTable}  overrideColors  Color Palette to apply to this generation.
    */
   public recolorSpritesheet = (overrideColors?: IColorTable): void => {
-    // Create a temporary canvas that will be used to manipulate the main Spritesheet
-    const context = this.createTemporaryCanvasContext();
-
     // Prepare a new image and draw the main image on the temporary canvas
     const image = new Image();
 
     image.src = this.initialSpritesheet;
-    context.drawImage(image, 0, 0);
+    this.canvasContext.drawImage(image, 0, 0);
 
     // Recolor the entire Spritesheet, then read and replace data in this ImageBuffer
-    const imageData = context.getImageData(0, 0, 160, 96);
+    const imageData = this.canvasContext.getImageData(0, 0, 160, 96);
     let currentPixel: string | null;
 
     // If no override was passed in from the user, generate a color palette
@@ -93,31 +105,12 @@ class SpriteManager {
     }
 
     // Update the temporary canvas and replace the main Spritesheet with recolored image
-    context.putImageData(imageData, 0, 0);
-    this.spritesheet.src = context.canvas.toDataURL();
+    this.canvasContext.putImageData(imageData, 0, 0);
+    this.spritesheet.src = this.canvasContext.canvas.toDataURL();
 
     domManipulator.recolorAllElements(this.newColors);
 
     this.lastPickedColors = this.newColors;
-  };
-
-  /**
-   * Creates a temporary Canvas element for image manipulation
-   */
-  private createTemporaryCanvasContext = (): CanvasRenderingContext2D => {
-    const newCanvas = document.createElement("canvas");
-
-    newCanvas.width = 160;
-    newCanvas.height = 96;
-
-    const context = newCanvas.getContext("2d");
-
-    // Thanks, TypeScript.
-    if (!context) {
-      throw new Error("Could not resolve Canvas Context");
-    }
-
-    return context;
   };
 
   /**
