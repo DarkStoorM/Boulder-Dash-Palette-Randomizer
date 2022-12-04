@@ -6,7 +6,7 @@ class SpriteManager {
   /**
    * Defines a range of values for how bright specific palette colors will be
    *
-   * TODO: add form controls for this for overrides
+   * TODO: add form controls to this for overriding purposes
    * TODO: add base copy for resetting purposes
    */
   private colorRanges: Record<keyof IColorTable, [number, number]> = {
@@ -29,7 +29,7 @@ class SpriteManager {
    */
   private declare lastPickedColors: IColorTable;
   /**
-   * Holds a palette of newly generated colors, including the locked ones
+   * Holds a palette of newly generated colors, taking locked colors into account
    */
   private declare newColors: IColorTable;
   /**
@@ -85,10 +85,8 @@ class SpriteManager {
       // If any of the currently processed pixels will match the base color, they will be replaced with a new color
       let colorType: keyof IColorTable;
       for (colorType in this.initialPalette) {
-        const key = colorType as keyof IColorTable;
-
-        if (currentPixel === this.initialPalette[key].toString()) {
-          imageData.data.set(this.newColors[key], x);
+        if (currentPixel === this.initialPalette[colorType].toString()) {
+          imageData.data.set(this.newColors[colorType], x);
           continue;
         }
       }
@@ -139,15 +137,13 @@ class SpriteManager {
 
     let colorType: keyof IColorTable;
     for (colorType in colorTypes) {
-      const label = colorType as keyof IColorTable;
-
       // Disallow changing the locked pixel color, just set it to the initial color and continue
-      if (domManipulator.colorElements[label].isLocked()) {
-        newPalette[label] = this.lastPickedColors[label];
+      if (domManipulator.colorElements[colorType].isLocked()) {
+        newPalette[colorType] = this.lastPickedColors[colorType];
         continue;
       }
 
-      newPalette[label] = Colors.randomColor(this.colorRanges[label][0], this.colorRanges[label][1]);
+      newPalette[colorType] = Colors.randomColor(this.colorRanges[colorType][0], this.colorRanges[colorType][1]);
     }
 
     return newPalette;
