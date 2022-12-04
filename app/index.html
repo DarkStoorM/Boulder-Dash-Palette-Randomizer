@@ -10,10 +10,61 @@
 </head>
 
 <body>
-  <div class="container">
-    <img id="spritesheet"
-      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABgAgMAAADnSZEKAAAADFBMVEVkZGQAAACjbjD///9vo1WOAAAC5klEQVRIx+SUoa7jMBBFhwwJ8a8NucSkv2ZiMqS/FhKyxNvTxN6UFSx6b6yrU1lHbTK6qv3/8fjumMWXp8R3x37U/N49jlGGeq3kkAJqHBITh27iGKleiUtvPsrzFKtr7bG8xLpVJ0Mq8M9+fWUZWnuMMfas59mlJyztOcQ8d609IvY8jx1hb24FUWF2rD0iRm+dpNeE28tErJluc3jGrXkSPVzQ0gaiS4+Pt+6ZThRd0K5v7FJ8iDW3JPk8iYnIzf2n91bTiVmzN2NDVLv1kbf21rdKxhED8gaIMcZx36NH1o0MrwNanGIdw+979H5NkQyam4uxIpz1jKmspEkJwy4xmz7X06oIpYDyNkvxKb60TrpUocIvsf8T6R4d5B5yB2eWSPfoIB7kDs6sPdI9OogIXQo4s/ZI9+ggIkSE86w90j06iAjdLOA8a490jw4iQkQ4Y2vS3n1EhF72gDPLo3t0EBEiwpml0T06iAgR4cwS6R4dRISIcGbtkU90EBHyMnDm/v9odBARIsKZtUe6RwcRIQuHc9Ye6R4dRISIcMbm0D06yEDu4MwS6R4dRITcwRljVvfi0N9269jGYRiIgqgT9seEMUu86phcwsMEA3hUwQG2hB9ZMIH1837tu+/TYTxiDvLzzvt0GI+YYw8yBQ3qMh4xxx7k0qAu4xFz7MG779agLuMRc+zBO28c8mA8Yo49yBEa1GU8Yo49qEeiy3jEHHuQOWpQl/GIOfYgc9SgLuMRc+xBpqBBXcYj5tiDeiS6jEfMsQeZowZ1GY+YYw8yRw3qMh4xBwqOeDqMR8yxB/Vo/KwezVq4TH/Ho1lj6tL+rkezXq+4pL/j0XvOMXRpf8ejNw/q0v6OR8PRurS/49Hw19Wl/R2Phm/Upf0dj2buM3Rpf8ej2XMcXdrf8WjWPkuX9nc8Gjvwvb/j0Wv9/MYl/R2Php9bl/Z3PBoe1KX9HY9mn310aX+/FdL3Pfz/XR85xz+tx9QBHWMZ1wAAAABJRU5ErkJggg==">
-    <button id="reroll">Regenerate colors</button>
+  <div class="layout">
+    <div class="layout__palette-generator">
+      <div class="layout__palette-generator__result-image">
+        <img id="spritesheet"
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABgAgMAAADnSZEKAAAADFBMVEVkZGQAAACjbjD///9vo1WOAAAC5klEQVRIx+SUoa7jMBBFhwwJ8a8NucSkv2ZiMqS/FhKyxNvTxN6UFSx6b6yrU1lHbTK6qv3/8fjumMWXp8R3x37U/N49jlGGeq3kkAJqHBITh27iGKleiUtvPsrzFKtr7bG8xLpVJ0Mq8M9+fWUZWnuMMfas59mlJyztOcQ8d609IvY8jx1hb24FUWF2rD0iRm+dpNeE28tErJluc3jGrXkSPVzQ0gaiS4+Pt+6ZThRd0K5v7FJ8iDW3JPk8iYnIzf2n91bTiVmzN2NDVLv1kbf21rdKxhED8gaIMcZx36NH1o0MrwNanGIdw+979H5NkQyam4uxIpz1jKmspEkJwy4xmz7X06oIpYDyNkvxKb60TrpUocIvsf8T6R4d5B5yB2eWSPfoIB7kDs6sPdI9OogIXQo4s/ZI9+ggIkSE86w90j06iAjdLOA8a490jw4iQkQ4Y2vS3n1EhF72gDPLo3t0EBEiwpml0T06iAgR4cwS6R4dRISIcGbtkU90EBHyMnDm/v9odBARIsKZtUe6RwcRIQuHc9Ye6R4dRISIcMbm0D06yEDu4MwS6R4dRITcwRljVvfi0N9269jGYRiIgqgT9seEMUu86phcwsMEA3hUwQG2hB9ZMIH1837tu+/TYTxiDvLzzvt0GI+YYw8yBQ3qMh4xxx7k0qAu4xFz7MG779agLuMRc+zBO28c8mA8Yo49yBEa1GU8Yo49qEeiy3jEHHuQOWpQl/GIOfYgc9SgLuMRc+xBpqBBXcYj5tiDeiS6jEfMsQeZowZ1GY+YYw8yRw3qMh4xBwqOeDqMR8yxB/Vo/KwezVq4TH/Ho1lj6tL+rkezXq+4pL/j0XvOMXRpf8ejNw/q0v6OR8PRurS/49Hw19Wl/R2Phm/Upf0dj2buM3Rpf8ej2XMcXdrf8WjWPkuX9nc8Gjvwvb/j0Wv9/MYl/R2Php9bl/Z3PBoe1KX9HY9mn310aX+/FdL3Pfz/XR85xz+tx9QBHWMZ1wAAAABJRU5ErkJggg==">
+      </div>
+      <div class="buttons__container">
+        <button id="reroll" class="button">Regenerate colors</button>
+        <button id="unlock-all" class="button">Unlock all colors</button>
+      </div>
+      <div class="color-components">
+        <div class="color-components__container">
+          <div class="color-components__fill__container" id="background" data-type="background" data-locked="false">
+            <div class="color-components__fill__container--fill" id="background-fill"></div>
+            <div class="color-components__fill__container--lock" id="background-lock">🔓</div>
+          </div>
+          <div class="color-components__output" id="background-output">text</div>
+        </div>
+        <div class="color-components__container">
+          <div class="color-components__fill__container" id="highlight" data-type="highlight" data-locked="false">
+            <div class="color-components__fill__container--fill" id="highlight-fill"></div>
+            <div class="color-components__fill__container--lock" id="highlight-lock">🔓</div>
+          </div>
+          <div class="color-components__output" id="highlight-output">text</div>
+        </div>
+        <div class="color-components__container">
+          <div class="color-components__fill__container" id="primary" data-type="primary" data-locked="false">
+            <div class="color-components__fill__container--fill" id="primary-fill"></div>
+            <div class="color-components__fill__container--lock" id="primary-lock">🔓</div>
+          </div>
+          <div class="color-components__output" id="primary-output">text</div>
+        </div>
+        <div class="color-components__container">
+          <div class="color-components__fill__container" id="secondary" data-type="secondary" data-locked="false">
+            <div class="color-components__fill__container--fill" id="secondary-fill"></div>
+            <div class="color-components__fill__container--lock" id="secondary-lock">🔓</div>
+          </div>
+          <div class="color-components__output" id="secondary-output">text</div>
+        </div>
+      </div>
+    </div>
+    <div class="layout__content">
+      <h2>Boulder Dash Palette Randomizer</h2>
+      <p>This tool creates a palette of random colors for Boulder Dash.</p>
+      <p>Each color can be <i>locked</i> for the next generation.</p>
+      <p>By default, all colors are clamped between a certain range of values for all RGB channels (0-255), fint-tuned
+        to give a bit more pleasant palette, avoiding combinations of very bright colors.</p>
+      <ul>
+        <li><b>Background</b>: 0 - 36</li>
+        <li><b>Highlights</b>: 175 - 231</li>
+        <li><b>Primary</b>: 75 - 176</li>
+        <li><b>Secondary</b>: 30 - 116</li>
+      </ul>
+      <p>The range is <b>random exclusive</b>.</p>
+    </div>
   </div>
   <script src="./app.js?v=1" defer></script>
 </body>
