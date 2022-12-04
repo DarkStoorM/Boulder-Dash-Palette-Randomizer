@@ -1,8 +1,10 @@
 import { domManipulator, DOMManipulator } from "./DOMManipulator";
 import { spriteManager } from "./SpriteManager";
+import { IColorTable } from "./interfaces/IColorTable";
 
 // Not strictly a button, but it does not matter here
 const rollButton = document.getElementById("reroll") as HTMLDivElement;
+const rerollSingleButton = document.querySelectorAll(".color-components__reroll-single");
 const lockButtons = document.querySelectorAll(".color-components__fill__container--lock");
 const unlockAllButton = document.getElementById("unlock-all") as HTMLDivElement;
 
@@ -16,6 +18,9 @@ const unlockAllButton = document.getElementById("unlock-all") as HTMLDivElement;
  *
  */
 lockButtons.forEach((lockButton) => lockButton.addEventListener("click", lockColor.bind(lockButton)));
+rerollSingleButton.forEach((rerollSingle) =>
+  rerollSingle.addEventListener("click", rerollSingleColor.bind(rerollSingle))
+);
 rollButton.addEventListener("click", spriteManager.recolorSpritesheet.bind(this, undefined)); // TODO argument
 unlockAllButton.addEventListener("click", domManipulator.unlockAllColors);
 
@@ -29,4 +34,18 @@ function lockColor(this: Element): void {
   const currentState = current.dataset.locked?.toLowerCase() == "true";
 
   DOMManipulator.changeLockState(current, currentState);
+}
+
+/**
+ * Rerolls the color from the selected element
+ */
+function rerollSingleColor(this: Element): void {
+  const current = this as HTMLDivElement;
+  const colorType = current.parentElement?.id;
+
+  if (!colorType) {
+    throw new Error(`Could not resolve the id from parent element ${current.id}`);
+  }
+
+  spriteManager.recolorSpritesheetWithSingle(colorType as keyof IColorTable);
 }

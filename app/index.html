@@ -21,33 +21,37 @@
         <button id="unlock-all" class="button">Unlock all colors</button>
       </div>
       <div class="color-components">
-        <div class="color-components__container">
-          <div class="color-components__fill__container" id="background" data-type="background" data-locked="false">
+        <div id="background" class="color-components__container">
+          <div class="color-components__fill__container" data-type="background" data-locked="false">
             <div class="color-components__fill__container--fill" id="background-fill"></div>
             <div class="color-components__fill__container--lock" id="background-lock">🔓</div>
           </div>
-          <div class="color-components__output" id="background-output">text</div>
+          <div class="color-components__reroll-single" id="background-reroll" data-current="">🎲</div>
+          <div class="color-components__output" id="background-output"></div>
         </div>
-        <div class="color-components__container">
-          <div class="color-components__fill__container" id="highlight" data-type="highlight" data-locked="false">
+        <div id="highlight" class="color-components__container">
+          <div class="color-components__fill__container" data-type="highlight" data-locked="false">
             <div class="color-components__fill__container--fill" id="highlight-fill"></div>
             <div class="color-components__fill__container--lock" id="highlight-lock">🔓</div>
           </div>
-          <div class="color-components__output" id="highlight-output">text</div>
+          <div class="color-components__reroll-single" id="highlight-reroll" data-current="">🎲</div>
+          <div class="color-components__output" id="highlight-output"></div>
         </div>
-        <div class="color-components__container">
-          <div class="color-components__fill__container" id="primary" data-type="primary" data-locked="false">
+        <div id="primary" class="color-components__container">
+          <div class="color-components__fill__container" data-type="primary" data-locked="false">
             <div class="color-components__fill__container--fill" id="primary-fill"></div>
             <div class="color-components__fill__container--lock" id="primary-lock">🔓</div>
           </div>
-          <div class="color-components__output" id="primary-output">text</div>
+          <div class="color-components__reroll-single" id="primary-reroll" data-current="">🎲</div>
+          <div class="color-components__output" id="primary-output"></div>
         </div>
-        <div class="color-components__container">
-          <div class="color-components__fill__container" id="secondary" data-type="secondary" data-locked="false">
+        <div id="secondary" class="color-components__container">
+          <div class="color-components__fill__container" data-type="secondary" data-locked="false">
             <div class="color-components__fill__container--fill" id="secondary-fill"></div>
             <div class="color-components__fill__container--lock" id="secondary-lock">🔓</div>
           </div>
-          <div class="color-components__output" id="secondary-output">text</div>
+          <div class="color-components__reroll-single" id="secondary-reroll" data-current="">🎲</div>
+          <div class="color-components__output" id="secondary-output"></div>
         </div>
       </div>
     </div>
