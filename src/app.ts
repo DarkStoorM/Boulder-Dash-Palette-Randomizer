@@ -4,7 +4,7 @@
  */
 export const baseColorRange: Record<keyof IColorTable, [number, number]> = {
   background: [0, 36],
-  highlight: [150, 201],
+  highlight: [180, 221],
   primary: [85, 166],
   secondary: [50, 106],
 };
