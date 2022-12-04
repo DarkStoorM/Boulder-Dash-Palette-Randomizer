@@ -1,3 +1,14 @@
+// Initialize before the constructors!!!
+/**
+ * Defines the default, fine-tuned color ranges for each color in the Palette
+ */
+export const baseColorRange: Record<keyof IColorTable, [number, number]> = {
+  background: [0, 36],
+  highlight: [150, 201],
+  primary: [85, 166],
+  secondary: [50, 106],
+};
+
 import { domManipulator, DOMManipulator } from "./DOMManipulator";
 import { spriteManager } from "./SpriteManager";
 import { IColorTable } from "./interfaces/IColorTable";

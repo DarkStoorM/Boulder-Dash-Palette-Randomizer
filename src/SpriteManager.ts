@@ -1,3 +1,4 @@
+import { baseColorRange } from "./app";
 import { domManipulator } from "./DOMManipulator";
 import { IColorTable } from "./interfaces/IColorTable";
 import { Colors } from "./utils/Colors";
@@ -11,10 +12,10 @@ class SpriteManager {
    * TODO: add base copy for resetting purposes
    */
   private colorRanges: Record<keyof IColorTable, [number, number]> = {
-    background: [0, 36],
-    highlight: [175, 231],
-    primary: [75, 176],
-    secondary: [30, 116],
+    background: baseColorRange.background,
+    highlight: baseColorRange.highlight,
+    primary: baseColorRange.primary,
+    secondary: baseColorRange.secondary,
   };
   /**
    * Defines the base colors the spritesheet will be colored with on refresh / regeneration
@@ -39,6 +40,18 @@ class SpriteManager {
   private spritesheet = document.getElementById("spritesheet") as HTMLImageElement;
 
   constructor() {
+    // Initialize the layout color ranges first
+    let key: keyof IColorTable;
+    for (key in this.colorRanges) {
+      const element = document.getElementsByClassName(`range-${key}`).item(0);
+
+      if (!element) {
+        throw new Error(`Could not resolve color range element for initialization: ${key}`);
+      }
+
+      element.innerHTML = this.colorRanges[key].join(" - ");
+    }
+
     // Hold a copy of initial spritesheet and palette for quick revert when interrupted
     this.initialSpritesheet = this.spritesheet.src;
 
@@ -52,7 +65,7 @@ class SpriteManager {
 
     this.lastPickedColors = this.initialPalette;
 
-    // Initialize the element colors in the DOM
+    // Initialize the color elements in the DOM
     domManipulator.recolorAllElements(this.initialPalette);
 
     const newCanvas = document.createElement("canvas") as HTMLCanvasElement;
