@@ -10,13 +10,17 @@
       width: $generator-width;
 
       & img {
-        height: inherit;
+        display: none;
+      }
+
+      & canvas {
         image-rendering: -moz-crisp-edges;
         image-rendering: -webkit-crisp-edges;
         image-rendering: pixelated;
         image-rendering: crisp-edges;
-        user-select: none;
-        width: inherit;
+        position: relative;
+        top: 96px;
+        left: 160px;
       }
     }
   }

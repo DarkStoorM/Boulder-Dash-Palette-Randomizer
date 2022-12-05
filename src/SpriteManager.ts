@@ -1,10 +1,9 @@
-import { baseColorRange } from "./app";
 import { domManipulator } from "./DOMManipulator";
+import { baseColorRange } from "./app";
 import { IColorTable } from "./interfaces/IColorTable";
 import { Colors } from "./utils/Colors";
 
 class SpriteManager {
-  private canvasContext: globalThis.CanvasRenderingContext2D;
   /**
    * Defines a range of values for how bright specific palette colors will be
    *
@@ -25,7 +24,8 @@ class SpriteManager {
    * Holds a copy of the initial spritesheet, which is automatically assigned on every generation, so we don't have to
    * wait for the current recolor operation to finish, avoiding color collisions during the interruption
    */
-  private initialSpritesheet: string;
+  private initialSpritesheet =
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABgAgMAAADnSZEKAAAADFBMVEVkZGQAAACjbjD///9vo1WOAAAC5klEQVRIx+SUoa7jMBBFhwwJ8a8NucSkv2ZiMqS/FhKyxNvTxN6UFSx6b6yrU1lHbTK6qv3/8fjumMWXp8R3x37U/N49jlGGeq3kkAJqHBITh27iGKleiUtvPsrzFKtr7bG8xLpVJ0Mq8M9+fWUZWnuMMfas59mlJyztOcQ8d609IvY8jx1hb24FUWF2rD0iRm+dpNeE28tErJluc3jGrXkSPVzQ0gaiS4+Pt+6ZThRd0K5v7FJ8iDW3JPk8iYnIzf2n91bTiVmzN2NDVLv1kbf21rdKxhED8gaIMcZx36NH1o0MrwNanGIdw+979H5NkQyam4uxIpz1jKmspEkJwy4xmz7X06oIpYDyNkvxKb60TrpUocIvsf8T6R4d5B5yB2eWSPfoIB7kDs6sPdI9OogIXQo4s/ZI9+ggIkSE86w90j06iAjdLOA8a490jw4iQkQ4Y2vS3n1EhF72gDPLo3t0EBEiwpml0T06iAgR4cwS6R4dRISIcGbtkU90EBHyMnDm/v9odBARIsKZtUe6RwcRIQuHc9Ye6R4dRISIcMbm0D06yEDu4MwS6R4dRITcwRljVvfi0N9269jGYRiIgqgT9seEMUu86phcwsMEA3hUwQG2hB9ZMIH1837tu+/TYTxiDvLzzvt0GI+YYw8yBQ3qMh4xxx7k0qAu4xFz7MG779agLuMRc+zBO28c8mA8Yo49yBEa1GU8Yo49qEeiy3jEHHuQOWpQl/GIOfYgc9SgLuMRc+xBpqBBXcYj5tiDeiS6jEfMsQeZowZ1GY+YYw8yRw3qMh4xBwqOeDqMR8yxB/Vo/KwezVq4TH/Ho1lj6tL+rkezXq+4pL/j0XvOMXRpf8ejNw/q0v6OR8PRurS/49Hw19Wl/R2Phm/Upf0dj2buM3Rpf8ej2XMcXdrf8WjWPkuX9nc8Gjvwvb/j0Wv9/MYl/R2Php9bl/Z3PBoe1KX9HY9mn310aX+/FdL3Pfz/XR85xz+tx9QBHWMZ1wAAAABJRU5ErkJggg==";
   /**
    * Holds a palette of previously used colors to provide Color Locking functionality
    */
@@ -37,7 +37,8 @@ class SpriteManager {
   /**
    * DOM element (image) containing the Game Spritesheet
    */
-  private spritesheet = document.getElementById("spritesheet") as HTMLImageElement;
+  private spritesheet = document.getElementById("spritesheet") as HTMLCanvasElement;
+  private spritesheetContext: globalThis.CanvasRenderingContext2D;
 
   constructor() {
     // Initialize the layout color ranges first
@@ -52,9 +53,6 @@ class SpriteManager {
       element.innerHTML = this.colorRanges[key].join(" - ");
     }
 
-    // Hold a copy of initial spritesheet and palette for quick revert when interrupted
-    this.initialSpritesheet = this.spritesheet.src;
-
     // Base, classic BD colors
     this.initialPalette = {
       background: Colors.colorFromHex("000000"),
@@ -68,19 +66,27 @@ class SpriteManager {
     // Initialize the color elements in the DOM
     domManipulator.recolorAllElements(this.initialPalette);
 
-    const newCanvas = document.createElement("canvas") as HTMLCanvasElement;
+    this.spritesheet.width = 160;
+    this.spritesheet.height = 96;
 
-    newCanvas.width = 160;
-    newCanvas.height = 96;
-
-    const context = newCanvas.getContext("2d");
+    const context = this.spritesheet.getContext("2d");
 
     // Thanks, TypeScript.
     if (!context) {
       throw new Error("Could not resolve Canvas Context");
     }
 
-    this.canvasContext = context;
+    this.spritesheetContext = context;
+    this.redrawCanvas(this.initialSpritesheet);
+  }
+
+  private redrawCanvas(source: string): void {
+    const image = new Image();
+    image.src = source;
+
+    this.spritesheetContext.drawImage(image, 0, 0);
+    this.spritesheetContext.canvas.style.transform = "scale(3)";
+    this.spritesheetContext.imageSmoothingEnabled = false;
   }
 
   /**
@@ -107,14 +113,20 @@ class SpriteManager {
    * @param   {IColorTable}  overrideColors  Color Palette to apply to this generation.
    */
   public recolorSpritesheet = (overrideColors?: IColorTable): void => {
-    // Prepare a new image and draw the main image on the temporary canvas
-    const image = new Image();
+    // No point in going further if all colors are locked
+    if (
+      Object.keys(domManipulator.colorElements).every((colorType) => {
+        return domManipulator.colorElements[colorType as keyof IColorTable].isLocked();
+      })
+    ) {
+      return;
+    }
 
-    image.src = this.initialSpritesheet;
-    this.canvasContext.drawImage(image, 0, 0);
+    // Prepare a new image and draw the main image on the temporary canvas
+    this.redrawCanvas(this.initialSpritesheet);
 
     // Recolor the entire Spritesheet, then read and replace data in this ImageBuffer
-    const imageData = this.canvasContext.getImageData(0, 0, 160, 96);
+    const imageData = this.spritesheetContext.getImageData(0, 0, 160, 96);
     let currentPixel: string | null;
 
     // If no override was passed in from the user, generate a color palette
@@ -136,12 +148,11 @@ class SpriteManager {
     }
 
     // Update the temporary canvas and replace the main Spritesheet with recolored image
-    this.canvasContext.putImageData(imageData, 0, 0);
-    this.spritesheet.src = this.canvasContext.canvas.toDataURL();
+    this.spritesheetContext.putImageData(imageData, 0, 0);
 
     domManipulator.recolorAllElements(this.newColors);
 
-    this.lastPickedColors = this.newColors;
+    this.lastPickedColors = Object.assign({}, this.newColors);
   };
 
   /**
