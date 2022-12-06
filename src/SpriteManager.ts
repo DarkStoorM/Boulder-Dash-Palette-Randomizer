@@ -77,35 +77,11 @@ class SpriteManager {
     }
 
     this.spritesheetContext = context;
-    this.redrawCanvas(this.initialSpritesheet);
-  }
-
-  private redrawCanvas(source: string): void {
-    const image = new Image();
-    image.src = source;
-
-    this.spritesheetContext.drawImage(image, 0, 0);
     this.spritesheetContext.canvas.style.transform = "scale(3)";
     this.spritesheetContext.imageSmoothingEnabled = false;
+
+    this.redrawCanvas(this.initialSpritesheet);
   }
-
-  /**
-   * Recolors the source image, but only the selected color will be overridden
-   *
-   * @param   {keyof}  colorType    Color type from the Palette. @see IColorTable
-   */
-  public recolorSpritesheetWithSingle = (colorType: keyof IColorTable): void => {
-    // Ignore if this color is locked
-    if (domManipulator.colorElements[colorType].isLocked()) {
-      return;
-    }
-
-    // Break the reference, else the spritesheet will not be recolored due to the overridden colors
-    const newPalette = Object.assign({}, this.lastPickedColors);
-    newPalette[colorType] = this.getRandomColorFromRange(colorType);
-
-    this.recolorSpritesheet(newPalette);
-  };
 
   /**
    * Recolors all pixels on the source image with a new palette or with the provided palette
@@ -122,16 +98,16 @@ class SpriteManager {
       return;
     }
 
-    // Prepare a new image and draw the main image on the temporary canvas
+    // Prepare a new image and draw the main image on the canvas
     this.redrawCanvas(this.initialSpritesheet);
 
-    // Recolor the entire Spritesheet, then read and replace data in this ImageBuffer
     const imageData = this.spritesheetContext.getImageData(0, 0, 160, 96);
     let currentPixel: string | null;
 
     // If no override was passed in from the user, generate a color palette
     this.newColors = overrideColors ?? this.generateNewColorPalette();
 
+    // Recolor the entire Spritesheet, then read and replace data in this ImageBuffer
     for (let x = 0; x < imageData.data.length; x = x + 4) {
       // Take the next chunk of the color and compare it to the base colors for replacement
       // NOTICE: Can't use Regex, because of string collisions - resulting in changing the colors twice
@@ -153,6 +129,24 @@ class SpriteManager {
     domManipulator.recolorAllElements(this.newColors);
 
     this.lastPickedColors = Object.assign({}, this.newColors);
+  };
+
+  /**
+   * Recolors the source image, but only the selected color will be overridden
+   *
+   * @param   {keyof}  colorType    Color type from the Palette. @see IColorTable
+   */
+  public recolorSpritesheetWithSingle = (colorType: keyof IColorTable): void => {
+    // Ignore if this color is locked
+    if (domManipulator.colorElements[colorType].isLocked()) {
+      return;
+    }
+
+    // Break the reference, else the spritesheet will not be recolored due to the overridden colors
+    const newPalette = Object.assign({}, this.lastPickedColors);
+    newPalette[colorType] = this.getRandomColorFromRange(colorType);
+
+    this.recolorSpritesheet(newPalette);
   };
 
   /**
@@ -192,6 +186,18 @@ class SpriteManager {
   private getRandomColorFromRange = (colorType: keyof IColorTable): Uint8ClampedArray => {
     return Colors.randomColor(this.colorRanges[colorType][0], this.colorRanges[colorType][1]);
   };
+
+  /**
+   * Re-draws a new source image on the canvas
+   *
+   * @param   {string}  source  Image to draw to
+   */
+  private redrawCanvas(source: string): void {
+    const image = new Image();
+    image.src = source;
+
+    this.spritesheetContext.drawImage(image, 0, 0);
+  }
 }
 
 export const spriteManager = new SpriteManager();
