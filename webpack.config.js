@@ -13,14 +13,14 @@ const Terser = new TerserPlugin({
       comments: false,
     },
   },
-})
+});
 
 const plugins = [
   new MiniCssExtractPlugin({
     filename: "[name].css",
     chunkFilename: "[id].css",
   }),
-  Terser
+  Terser,
 ];
 
 module.exports = {
