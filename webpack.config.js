@@ -20,12 +20,12 @@ const plugins = [
     filename: "[name].css",
     chunkFilename: "[id].css",
   }),
+  Terser
 ];
 
 module.exports = {
-  mode: "development",
-  cache: false,
-  devtool: "inline-source-map",
+  mode: "production",
+  cache: true,
   entry: {
     app: "./src/app.ts",
     style: "./scss/app.scss",
