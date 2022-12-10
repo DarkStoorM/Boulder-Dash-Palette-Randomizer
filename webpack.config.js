@@ -5,26 +5,27 @@ const autoprefixer = require("autoprefixer");
 const cssnano = require("cssnano");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const plugins = [
-  new TerserPlugin({
-    parallel: true,
-    extractComments: false,
-    terserOptions: {
-      format: {
-        comments: false,
-      },
+const Terser = new TerserPlugin({
+  parallel: true,
+  extractComments: false,
+  terserOptions: {
+    format: {
+      comments: false,
     },
-  }),
+  },
+});
+
+const plugins = [
   new MiniCssExtractPlugin({
     filename: "[name].css",
     chunkFilename: "[id].css",
   }),
+  Terser,
 ];
 
 module.exports = {
-  mode: "development",
-  cache: false,
-  devtool: "inline-source-map",
+  mode: "production",
+  cache: true,
   entry: {
     app: "./src/app.ts",
     style: "./scss/app.scss",

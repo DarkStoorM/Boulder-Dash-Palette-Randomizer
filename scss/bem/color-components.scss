@@ -10,7 +10,6 @@ $main-width: 480px;
   }
 
   &__container {
-    height: 4rem;
     width: 6rem;
   }
 
@@ -41,6 +40,7 @@ $main-width: 480px;
     }
   }
 
+  &__reroll-single,
   &__output {
     @include full-border();
 
@@ -51,9 +51,16 @@ $main-width: 480px;
     width: inherit;
 
     @include flex-center();
+  }
 
-    &:before {
-      content: '#';
-    }
+  // Override shared styles
+  &__reroll-single {
+    background-color: #335a61;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  &__output:before {
+    content: '#';
   }
 }

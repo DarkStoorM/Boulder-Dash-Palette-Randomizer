@@ -7,16 +7,23 @@
   &__palette-generator {
     &__result-image {
       height: $result-image-height;
+      position: relative;
       width: $generator-width;
 
+      & canvas {
+        @include render-pixelated();
+        @include absolute-top-left();
+
+        top: 96px;
+        left: 160px;
+      }
+
       & img {
-        height: inherit;
-        image-rendering: -moz-crisp-edges;
-        image-rendering: -webkit-crisp-edges;
-        image-rendering: pixelated;
-        image-rendering: crisp-edges;
-        user-select: none;
-        width: inherit;
+        @include render-pixelated();
+        @include absolute-top-left();
+
+        height: 288px;
+        width: 480px;
       }
     }
   }
