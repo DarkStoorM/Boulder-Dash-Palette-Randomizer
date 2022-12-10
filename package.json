@@ -1,6 +1,6 @@
 {
   "name": "boulder-dash-palette-randomizer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Palette Color Randomizer for Boulder Dash",
   "scripts": {
     "prestart": "npm run src:build",
