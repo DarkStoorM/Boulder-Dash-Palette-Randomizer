@@ -9,7 +9,7 @@ The palette values have been somewhat fine-tuned to generate colors easier for t
 - `Primary`: 85 - 166
 - `Secondary`: 50 - 106
 
-Refer to the [IColorTable](https://github.com/DarkStoorM/Boulder-Dash-Palette-Randomizer/blob/main/src/interfaces/IColorTable.ts) interface for the explanation on the colors. These are not the official color names. The color order  is preferential from other Construction Kits. Values can be tweaked manually, when running from source (requires rebuilding `npm run src:build`).
+Refer to the [IColorTable](https://github.com/DarkStoorM/Boulder-Dash-Palette-Randomizer/blob/main/src/interfaces/IColorTable.ts) interface for the explanation on the colors. These are not the official color names. The color order is preferential from other Construction Kits. Values can be tweaked manually, when running from source (requires rebuilding `npm run src:build`).
 
 This project was a bit rushed, some TODOs were left behind.
 
