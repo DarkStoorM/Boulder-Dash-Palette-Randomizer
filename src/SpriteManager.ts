@@ -142,7 +142,7 @@ class SpriteManager {
       return;
     }
 
-    // Break the reference, else the spritesheet will not be recolored due to the overridden colors
+    // Break the reference, else the spritesheet will not be recolored due to the overridden colors being referenced
     const newPalette = Object.assign({}, this.lastPickedColors);
     newPalette[colorType] = this.getRandomColorFromRange(colorType);
 
