@@ -1,7 +1,7 @@
 {
-  "name": "boulder-dash",
-  "version": "0.0.2",
-  "description": "Boulder Dash: TypeScript Practice Project",
+  "name": "boulder-dash-palette-randomizer",
+  "version": "1.0.0",
+  "description": "Palette Color Randomizer for Boulder Dash",
   "scripts": {
     "prestart": "npm run src:build",
     "start": "npx open-cli \"app/index.html\"",
