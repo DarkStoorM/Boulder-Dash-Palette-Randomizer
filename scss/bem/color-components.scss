@@ -40,6 +40,7 @@ $main-width: 480px;
     }
   }
 
+  &__header,
   &__reroll-single,
   &__output {
     @include full-border();
@@ -51,6 +52,12 @@ $main-width: 480px;
     width: inherit;
 
     @include flex-center();
+  }
+
+  &__header {
+    background-color: #335a61;
+    text-transform: uppercase;
+    font-size: small;
   }
 
   // Override shared styles
